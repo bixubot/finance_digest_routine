@@ -24,10 +24,12 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
     "dotenv": "^17.4.2",
-    "googleapis": "^172.0.0"
+    "googleapis": "^172.0.0",
+    "p-retry": "^8.0.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
+    "@types/p-retry": "^3.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   }
