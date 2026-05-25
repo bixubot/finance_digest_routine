@@ -1,0 +1,40 @@
+name: Daily Finance Digest
+
+on:
+  schedule:
+    - cron: '0 7 * * *'   # 7:00 AM UTC daily
+  workflow_dispatch:        # manual trigger
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+
+      # Write Google OAuth token from secret to disk at runtime
+      - name: Write Google token
+        run: echo '${{ secrets.GOOGLE_TOKEN_JSON }}' > token.json
+
+      - name: Run digest pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+          TOPICS: ${{ vars.TOPICS }}
+          REPORT_DEPTH: ${{ vars.REPORT_DEPTH }}
+          CUSTOM_FOCUS: ${{ vars.CUSTOM_FOCUS }}
+        run: npx ts-node src/index.ts
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: finance-digest-${{ github.run_id }}
+          path: reports/
