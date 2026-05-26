@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "auth": "ts-node src/auth.ts",
+    "dev": "ts-node src/orchestrator.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/orchestrator.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +23,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
     "dotenv": "^17.4.2",
-    "googleapis": "^172.0.0",
+    "p-limit": "^7.3.0",
     "p-retry": "^8.0.0"
   },
   "devDependencies": {
