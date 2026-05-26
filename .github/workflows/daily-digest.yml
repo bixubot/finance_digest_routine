@@ -17,23 +17,21 @@ jobs:
 
       - run: npm ci
 
-      # Write Google OAuth token from secret to disk at runtime
-      - name: Write Google token
-        run: echo '${{ secrets.GOOGLE_TOKEN_JSON }}' > token.json
-
-      - name: Run digest pipeline
+      - name: Run orchestrator
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          ANTHROPIC_API_KEY:      ${{ secrets.ANTHROPIC_API_KEY }}
+          TOPICS_MACRO:           ${{ vars.TOPICS_MACRO }}
+          TOPICS_EQUITIES:        ${{ vars.TOPICS_EQUITIES }}
+          TOPICS_FIXED_INCOME:    ${{ vars.TOPICS_FIXED_INCOME }}
+          TOPICS_COMMODITIES:     ${{ vars.TOPICS_COMMODITIES }}
+          TOPICS_CRYPTO_FX:       ${{ vars.TOPICS_CRYPTO_FX }}
+          REPORT_DEPTH:           ${{ vars.REPORT_DEPTH }}
+          EMAIL_RECIPIENTS:       ${{ secrets.EMAIL_RECIPIENTS }}
           GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
-          TOPICS: ${{ vars.TOPICS }}
-          REPORT_DEPTH: ${{ vars.REPORT_DEPTH }}
-          CUSTOM_FOCUS: ${{ vars.CUSTOM_FOCUS }}
-        run: npx ts-node src/index.ts
+        run: npx ts-node src/orchestrator.ts
 
       - name: Upload report artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: finance-digest-${{ github.run_id }}
