@@ -6,7 +6,7 @@ export const MCP_SERVERS = [
   { type: 'url' as const, url: 'https://gmailmcp.googleapis.com/mcp/v1', name: 'gmail'  },
 ];
 
-export const MODEL = 'claude-sonnet-4-20250514';
+export const MODEL = 'claude-sonnet-4-6';
 
 export const config = {
   anthropicKey:  process.env.ANTHROPIC_API_KEY!,
